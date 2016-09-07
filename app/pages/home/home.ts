@@ -7,6 +7,8 @@ import { IAppState } from './../../state';
 import { IDeviceInfo } from './../../plugin';
 import { ScanActions } from './../../actions';
 
+import { ServicesPage } from './../services/services';
+
 @Component({
   templateUrl: 'build/pages/home/home.html'
 })
@@ -49,6 +51,9 @@ export class HomePage {
     this.store.dispatch(this.scanActions.stopScan());
   }
 
-  connectToDevice(deviceId: string) {
+  connectToDevice(device: IDeviceInfo) {
+    this.navCtrl.push(ServicesPage, {
+      selectedDevice: device
+    });
   }
 }

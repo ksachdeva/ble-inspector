@@ -23,4 +23,26 @@ export class BLECentralService {
     return Observable.fromPromise(Central.stopScan());
   }
 
+  connectToDevice(device: IDeviceInfo): Observable<IDeviceInfo> {
+    return Observable.fromPromise(Central.connectToDevice({
+      deviceId: device.uuid
+    }));
+  }
+
+  disconnectDevice(device: IDeviceInfo): Observable<IDeviceInfo> {
+    return Observable.fromPromise(Central.disconnectDevice({
+      deviceId: device.uuid
+    }));
+  }
+
+  isDeviceConnected(device: IDeviceInfo): Observable<boolean> {
+    return Observable.fromPromise(Central.isDeviceConnected({
+      deviceId: device.uuid
+    }));
+  }
+
+  monitorDeviceDisconnect(): Observable<IDeviceInfo> {
+    return Central.monitorDeviceDisconnect();
+  }
+
 }

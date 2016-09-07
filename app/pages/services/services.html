@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Services
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <button (click)="connect()" [disabled]="!(connectEnabled$ | async)" >Connect</button>
+  <button (click)="disconnect()" [disabled]="!(disconnectEnabled$ | async)">Disconnect</button>
+
+
+  <ion-list>
+
+  </ion-list>
+
+</ion-content>

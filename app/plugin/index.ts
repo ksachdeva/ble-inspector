@@ -28,4 +28,23 @@ export class Central {
   static connectToDevice(options: any): Promise<any> {
     return;
   }
+
+  @Cordova()
+  static disconnectDevice(options: any): Promise<any> {
+    return;
+  }
+
+  @Cordova()
+  static isDeviceConnected(options: any): Promise<boolean> {
+    return;
+  }
+
+  @Cordova({
+    observable: true
+  })
+  static monitorDeviceDisconnect(): Observable<IDeviceInfo> {
+    return;
+  }
+
+
 }

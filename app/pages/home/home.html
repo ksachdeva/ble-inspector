@@ -11,10 +11,11 @@
   <button (click)="stopScan()" [disabled]="!(stopScanEnabled$ | async)">Stop Scan</button>
 
   <ion-list>
-    <ion-item *ngFor="let item of devices$ | async">
+
+    <button ion-item *ngFor="let item of devices$ | async" (click)="connectToDevice(item)">
       {{ item.uuid }} : {{ item.rssi }}
-      <button (click)="connectToDevice(item.uuid)">Connect</button>
-    </ion-item>
+    </button>
+
   </ion-list>
 
 
