@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ionicBootstrap, Platform } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
 
+import APP_PROVIDERS from './module';
 import { HomePage } from './pages/home/home';
 
 
@@ -20,4 +21,6 @@ export class MyApp {
   }
 }
 
-ionicBootstrap(MyApp);
+ionicBootstrap(MyApp, [
+  ...APP_PROVIDERS
+]);
