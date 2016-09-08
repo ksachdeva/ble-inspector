@@ -4,7 +4,7 @@ import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from './../../state';
-import { IDeviceInfo } from './../../plugin';
+import { IDeviceInfo, IService } from './../../plugin';
 import { DeviceActions } from './../../actions';
 
 @Component({
@@ -12,7 +12,7 @@ import { DeviceActions } from './../../actions';
 })
 export class ServicesPage {
 
-  // services$: Observable<Array<IDeviceInfo>>;
+  services$: Observable<Array<IService>>;
   selectedDevice: IDeviceInfo;
 
   connectEnabled$: Observable<boolean>;
@@ -28,8 +28,6 @@ export class ServicesPage {
 
     this.selectedDevice = navParams.get('selectedDevice');
 
-    console.log(this.selectedDevice);
-
     const connected$ = store.select(s => s.device.connected);
     const connecting$ = store.select(s => s.device.connecting);
 
@@ -42,6 +40,8 @@ export class ServicesPage {
       connected$, connecting$, (connected: boolean, connecting: boolean) => {
         return !connecting && connected;
       });
+
+    this.services$ = store.select(s => s.device.services);
 
     this.store.dispatch(this.deviceActions.monitorDeviceDisconnect());
     this.store.dispatch(this.deviceActions.connectToDevice(this.selectedDevice));

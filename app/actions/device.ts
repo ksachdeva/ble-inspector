@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IDeviceInfo } from './../plugin';
+import { IDeviceInfo, IService } from './../plugin';
 
 @Injectable()
 export class DeviceActions {
@@ -12,6 +12,23 @@ export class DeviceActions {
 
   static MONITOR_DEVICE_DISCONNECT = 'Monitor device disconnect';
   static DEVICE_DISCONNECTED = 'Device Disconnected';
+
+  static START_SERVICE_DISCOVERY = 'Start Service discovery';
+  static SERVICES_DISCOVERED = 'Services Discovered';
+
+  discoverServices(payload: IDeviceInfo) {
+    return {
+      type: DeviceActions.START_SERVICE_DISCOVERY,
+      payload
+    };
+  }
+
+  discoveredServices(payload: Array<IService>) {
+    return {
+      type: DeviceActions.SERVICES_DISCOVERED,
+      payload
+    };
+  }
 
   monitorDeviceDisconnect() {
     return {

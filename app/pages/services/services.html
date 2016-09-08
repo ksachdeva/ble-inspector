@@ -12,6 +12,9 @@
 
 
   <ion-list>
+    <button ion-item *ngFor="let item of services$ | async">
+      {{ item.uuid }} : {{ item.isPrimary }}
+    </button>
 
   </ion-list>
 

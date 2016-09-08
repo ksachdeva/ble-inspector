@@ -5,7 +5,7 @@ import { Effect, StateUpdates, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Diagnostic } from 'ionic-native';
 
-import { IDeviceInfo } from './../plugin';
+import { IDeviceInfo, IService } from './../plugin';
 import { DeviceActions } from './../actions/device';
 import { IAppState } from './../state';
 import { BLECentralService } from './../services/ble-central';
@@ -34,6 +34,19 @@ export class DeviceEffects {
     .mergeMap((deviceInfo) =>
       this.bleService.monitorDeviceDisconnect()
         .map(res => this.ngZone.run(() => this.deviceActions.deviceDisconnected(res)))
+    );
+
+  @Effect() deviceConnected$ = this.updates$
+    .whenAction(DeviceActions.CONNECTED_TO_DEVICE)
+    .map<IDeviceInfo>(toPayload)
+    .map(deviceInfo => this.deviceActions.discoverServices(deviceInfo));
+
+  @Effect() discoverServices$ = this.updates$
+    .whenAction(DeviceActions.START_SERVICE_DISCOVERY)
+    .map<IDeviceInfo>(toPayload)
+    .mergeMap((deviceInfo) =>
+      this.bleService.discoverServices(deviceInfo)
+        .map(res => this.ngZone.run(() => this.deviceActions.discoveredServices(res)))
     );
 
   constructor(

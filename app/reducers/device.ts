@@ -1,14 +1,16 @@
 import * as _ from 'lodash';
 import { Action } from '@ngrx/store';
 
-import { IDeviceInfo } from './../plugin';
+import { IDeviceInfo, IService } from './../plugin';
 import { IDeviceState } from './../state/device';
 import { DeviceActions } from './../actions/device';
 
 const initialState: IDeviceState = {
   deviceInfo: null,
   connected: false,
-  connecting: false
+  connecting: false,
+  discoveringServices: false,
+  services: []
 };
 
 function connectedToDevice(state = initialState, payload: IDeviceInfo) {
@@ -33,6 +35,19 @@ function disconnectedDevice(state = initialState) {
   });
 }
 
+function startDiscoveryService(state = initialState) {
+  return Object.assign({}, state, {
+    discoveringServices: true
+  });
+}
+
+function servicesDiscovered(state = initialState, payload: Array<IService>) {
+  return Object.assign({}, state, {
+    discoveredServices: false,
+    services: payload
+  });
+}
+
 export default function(state = initialState, action: Action): IDeviceState {
   switch (action.type) {
     case DeviceActions.CONNECT_TO_DEVICE:
@@ -41,6 +56,10 @@ export default function(state = initialState, action: Action): IDeviceState {
       return connectedToDevice(state, action.payload);
     case DeviceActions.DEVICE_DISCONNECTED:
       return disconnectedDevice(state);
+    case DeviceActions.START_SERVICE_DISCOVERY:
+      return startDiscoveryService(state);
+    case DeviceActions.SERVICES_DISCOVERED:
+      return servicesDiscovered(state, action.payload);
     default:
       return state;
   }

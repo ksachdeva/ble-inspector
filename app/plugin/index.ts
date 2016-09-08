@@ -3,7 +3,13 @@ import { Plugin, Cordova } from 'ionic-native';
 
 export interface IDeviceInfo {
   uuid: string;
-  rssi: boolean;
+  rssi: number;
+}
+
+export interface IService {
+  uuid: string;
+  deviceUUID: string;
+  isPrimary: string;
 }
 
 @Plugin({
@@ -39,12 +45,15 @@ export class Central {
     return;
   }
 
+  @Cordova()
+  static discoverServices(options: any): Promise<Array<IService>> {
+    return;
+  }
+
   @Cordova({
     observable: true
   })
   static monitorDeviceDisconnect(): Observable<IDeviceInfo> {
     return;
   }
-
-
 }
