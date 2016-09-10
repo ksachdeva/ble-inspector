@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IDeviceInfo, IService } from './../plugin';
+import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
 @Injectable()
 export class DeviceActions {
@@ -15,6 +15,23 @@ export class DeviceActions {
 
   static START_SERVICE_DISCOVERY = 'Start Service discovery';
   static SERVICES_DISCOVERED = 'Services Discovered';
+
+  static START_CHARACTERISTICS_DISCOVERY = 'Start characteristics discovery';
+  static CHARACTERISTICS_DISCOVERED = 'Characterisitics Discovered';
+
+  discoverCharacterisitics(payload: IService) {
+    return {
+      type: DeviceActions.START_CHARACTERISTICS_DISCOVERY,
+      payload
+    };
+  }
+
+  discoveredCharacteristics(payload: Array<ICharacteristic>) {
+    return {
+      type: DeviceActions.CHARACTERISTICS_DISCOVERED,
+      payload
+    };
+  }
 
   discoverServices(payload: IDeviceInfo) {
     return {
@@ -64,10 +81,13 @@ export class DeviceActions {
     };
   }
 
-  failedToConnectDevice(payload: IDeviceInfo) {
+  failedToConnectDevice(device: IDeviceInfo, error: any) {
     return {
       type: DeviceActions.CONNECTION_TO_DEVICE_FAILED,
-      payload
+      payload: {
+        device,
+        error
+      }
     };
   }
 }

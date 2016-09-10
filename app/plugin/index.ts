@@ -12,6 +12,18 @@ export interface IService {
   isPrimary: string;
 }
 
+export interface ICharacteristic {
+  uuid: string;
+  deviceUUID: string;
+  serviceUUID: string;
+  isReadable: boolean;
+  isWritableWithResponse: boolean;
+  isWritableWithoutResponse: boolean;
+  isNotifiable: boolean;
+  isIndictable: boolean;
+  value: string;
+}
+
 @Plugin({
   plugin: 'cordova.plugins.ble.Central',
   pluginRef: 'cordova.plugins.ble.Central'
@@ -47,6 +59,11 @@ export class Central {
 
   @Cordova()
   static discoverServices(options: any): Promise<Array<IService>> {
+    return;
+  }
+
+  @Cordova()
+  static discoverCharacteristics(options: any): Promise<Array<ICharacteristic>> {
     return;
   }
 

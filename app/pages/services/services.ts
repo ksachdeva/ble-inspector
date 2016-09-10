@@ -7,6 +7,9 @@ import { IAppState } from './../../state';
 import { IDeviceInfo, IService } from './../../plugin';
 import { DeviceActions } from './../../actions';
 
+import { CharacteristicsPage } from '../characteristics/characteristics';
+
+
 @Component({
   templateUrl: 'build/pages/services/services.html'
 })
@@ -55,4 +58,9 @@ export class ServicesPage {
     this.store.dispatch(this.deviceActions.disconnectDevice(this.selectedDevice));
   }
 
+  discoverCharacteristics(service: IService) {
+    this.navCtrl.push(CharacteristicsPage, {
+      selectedService: service
+    });
+  }
 }

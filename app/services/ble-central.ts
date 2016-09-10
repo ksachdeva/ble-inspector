@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Injectable, NgZone } from '@angular/core';
 import { Diagnostic } from 'ionic-native';
 
-import { Central, IDeviceInfo, IService } from './../plugin';
+import { Central, IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
 @Injectable()
 export class BLECentralService {
@@ -48,6 +48,13 @@ export class BLECentralService {
   discoverServices(device: IDeviceInfo): Observable<Array<IService>> {
     return Observable.fromPromise(Central.discoverServices({
       deviceId: device.uuid
+    }));
+  }
+
+  discoverCharacteristics(service: IService): Observable<Array<ICharacteristic>> {
+    return Observable.fromPromise(Central.discoverCharacteristics({
+      deviceId: service.deviceUUID,
+      serviceUUID: service.uuid
     }));
   }
 

@@ -19,6 +19,7 @@ export class DeviceEffects {
     .mergeMap((deviceInfo) =>
       this.bleService.connectToDevice(deviceInfo)
         .map(res => this.ngZone.run(() => this.deviceActions.connectedToDevice(res)))
+        .catch(err => Observable.of(this.deviceActions.failedToConnectDevice(deviceInfo, err)))
     );
 
   @Effect() disconnectDevice$ = this.updates$
@@ -47,6 +48,14 @@ export class DeviceEffects {
     .mergeMap((deviceInfo) =>
       this.bleService.discoverServices(deviceInfo)
         .map(res => this.ngZone.run(() => this.deviceActions.discoveredServices(res)))
+    );
+
+  @Effect() discoverCharacterisitics$ = this.updates$
+    .whenAction(DeviceActions.START_CHARACTERISTICS_DISCOVERY)
+    .map<IService>(toPayload)
+    .mergeMap((service) =>
+      this.bleService.discoverCharacteristics(service)
+        .map(res => this.ngZone.run(() => this.deviceActions.discoveredCharacteristics(res)))
     );
 
   constructor(

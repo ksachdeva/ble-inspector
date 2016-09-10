@@ -1,21 +1,20 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Services
-    </ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>
+            Services
+        </ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <button (click)="connect()" [disabled]="!(connectEnabled$ | async)" >Connect</button>
-  <button (click)="disconnect()" [disabled]="!(disconnectEnabled$ | async)">Disconnect</button>
+    <button (click)="connect()" [disabled]="!(connectEnabled$ | async)">Connect</button>
+    <button (click)="disconnect()" [disabled]="!(disconnectEnabled$ | async)">Disconnect</button>
 
-
-  <ion-list>
-    <button ion-item *ngFor="let item of services$ | async">
+    <ion-list>
+        <button ion-item *ngFor="let item of services$ | async" (click)="discoverCharacteristics(item)">
       {{ item.uuid }} : {{ item.isPrimary }}
     </button>
 
-  </ion-list>
+    </ion-list>
 
 </ion-content>

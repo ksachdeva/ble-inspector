@@ -1,0 +1,22 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Characteristics
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-list>
+        <button ion-item *ngFor="let item of chars">
+      <div>uuid: {{ item.uuid }}</div>
+      <div>isReadable: {{ item.isReadable }}</div>
+      <div>isWritableWithResponse: {{ item.isWritableWithResponse }}</div>
+      <div>isWritableWithoutResponse: {{ item.isWritableWithoutResponse}}</div>
+      <div>isNotifiable: {{item.isNotifiable}}</div>
+      <div>value: {{ item.value}}</div>
+    </button>
+
+    </ion-list>
+
+</ion-content>

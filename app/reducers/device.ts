@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { Action } from '@ngrx/store';
 
-import { IDeviceInfo, IService } from './../plugin';
+import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 import { IDeviceState } from './../state/device';
 import { DeviceActions } from './../actions/device';
 
@@ -10,7 +10,9 @@ const initialState: IDeviceState = {
   connected: false,
   connecting: false,
   discoveringServices: false,
-  services: []
+  discoveringChars: false,
+  services: [],
+  chars: []
 };
 
 function connectedToDevice(state = initialState, payload: IDeviceInfo) {
@@ -43,8 +45,15 @@ function startDiscoveryService(state = initialState) {
 
 function servicesDiscovered(state = initialState, payload: Array<IService>) {
   return Object.assign({}, state, {
-    discoveredServices: false,
+    discoveringServices: false,
     services: payload
+  });
+}
+
+function charsDiscovered(state = initialState, payload: Array<ICharacteristic>) {
+  return Object.assign({}, state, {
+    discoveringChars: false,
+    chars: payload
   });
 }
 
@@ -60,6 +69,8 @@ export default function(state = initialState, action: Action): IDeviceState {
       return startDiscoveryService(state);
     case DeviceActions.SERVICES_DISCOVERED:
       return servicesDiscovered(state, action.payload);
+    case DeviceActions.CHARACTERISTICS_DISCOVERED:
+      return charsDiscovered(state, action.payload);
     default:
       return state;
   }
