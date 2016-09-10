@@ -64,6 +64,12 @@ function startCharacteristicMonitoring(state = initialState, payload: ICharacter
   return state;
 }
 
+function stoppedCharacteristicMonitoring(state = initialState, payload: ICharacteristicState) {
+  const readChar = _.find(state.chars, (c) => c.characteristic.uuid === payload.characteristic.uuid);
+  readChar.transactionId = null;
+  return state;
+}
+
 function readCharacterisitic(state = initialState, payload: ICharacteristic) {
   // find the char that we have read and replace its values
   // mutation ??
@@ -88,6 +94,8 @@ export default function(state = initialState, action: Action): IDeviceState {
       return charsDiscovered(state, action.payload);
     case DeviceActions.START_CHARACTERISTIC_MONITORING:
       return startCharacteristicMonitoring(state, action.payload);
+    case DeviceActions.STOPPED_CHARACTERISTIC_MONITORING:
+      return stoppedCharacteristicMonitoring(state, action.payload);
     case DeviceActions.READ_CHARACTERISITC:
       return readCharacterisitic(state, action.payload);
     default:

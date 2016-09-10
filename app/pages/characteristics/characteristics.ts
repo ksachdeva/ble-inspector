@@ -41,15 +41,25 @@ export class CharacteristicsPage {
     this.store.dispatch(this.deviceActions.startCharacteristicMonitoring(charState));
   }
 
+  stopMonitoring(charState: ICharacteristicState) {
+    this.store.dispatch(this.deviceActions.stopCharacteristicMonitoring(charState));
+  }
+
   showOptions(charState: ICharacteristicState) {
+
+    const monitorTitle = charState.transactionId === null ? 'Monitor' : 'Cancel Monitor';
 
     let actionSheet = this.actionSheetCtrl.create({
       title: 'Select',
       buttons: [
         {
-          text: 'Monitor',
+          text: monitorTitle,
           handler: () => {
-            this.startMonitoring(charState);
+            if (charState.transactionId === null) {
+              this.startMonitoring(charState);
+            } else {
+              this.stopMonitoring(charState);
+            }
           }
         }, {
           text: 'Read',
