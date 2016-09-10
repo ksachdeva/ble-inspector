@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Action } from '@ngrx/store';
 
 import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
-import { IDeviceState } from './../state/device';
+import { IDeviceState, ICharacteristicState } from './../state/device';
 import { DeviceActions } from './../actions/device';
 
 const initialState: IDeviceState = {
@@ -51,10 +51,25 @@ function servicesDiscovered(state = initialState, payload: Array<IService>) {
 }
 
 function charsDiscovered(state = initialState, payload: Array<ICharacteristic>) {
+  const charsState: Array<ICharacteristicState> = _.map(payload, (p) => ({ characteristic: p, transactionId: null }));
   return Object.assign({}, state, {
     discoveringChars: false,
-    chars: payload
+    chars: charsState
   });
+}
+
+function startCharacteristicMonitoring(state = initialState, payload: ICharacteristicState) {
+  const readChar = _.find(state.chars, (c) => c.characteristic.uuid === payload.characteristic.uuid);
+  readChar.transactionId = '2132';
+  return state;
+}
+
+function readCharacterisitic(state = initialState, payload: ICharacteristic) {
+  // find the char that we have read and replace its values
+  // mutation ??
+  const readChar = _.find(state.chars, (c) => c.characteristic.uuid === payload.uuid);
+  readChar.characteristic.value = payload.value;
+  return state;
 }
 
 export default function(state = initialState, action: Action): IDeviceState {
@@ -71,6 +86,10 @@ export default function(state = initialState, action: Action): IDeviceState {
       return servicesDiscovered(state, action.payload);
     case DeviceActions.CHARACTERISTICS_DISCOVERED:
       return charsDiscovered(state, action.payload);
+    case DeviceActions.START_CHARACTERISTIC_MONITORING:
+      return startCharacteristicMonitoring(state, action.payload);
+    case DeviceActions.READ_CHARACTERISITC:
+      return readCharacterisitic(state, action.payload);
     default:
       return state;
   }

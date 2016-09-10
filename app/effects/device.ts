@@ -1,13 +1,11 @@
 import 'rxjs';
 import { Injectable, NgZone } from '@angular/core';
-import { Action } from '@ngrx/store';
 import { Effect, StateUpdates, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { Diagnostic } from 'ionic-native';
 
 import { IDeviceInfo, IService } from './../plugin';
 import { DeviceActions } from './../actions/device';
-import { IAppState } from './../state';
+import { IAppState, ICharacteristicState } from './../state';
 import { BLECentralService } from './../services/ble-central';
 
 @Injectable()
@@ -56,6 +54,22 @@ export class DeviceEffects {
     .mergeMap((service) =>
       this.bleService.discoverCharacteristics(service)
         .map(res => this.ngZone.run(() => this.deviceActions.discoveredCharacteristics(res)))
+    );
+
+  @Effect() monitorCharacteristic$ = this.updates$
+    .whenAction(DeviceActions.START_CHARACTERISTIC_MONITORING)
+    .map<ICharacteristicState>(toPayload)
+    .mergeMap((charState) =>
+      this.bleService.monitorCharacteristic(charState.characteristic, charState.transactionId)
+        .map(res => this.ngZone.run(() => this.deviceActions.readCharacteristic(res)))
+    );
+
+  @Effect() stopCharacteristicMonitoring$ = this.updates$
+    .whenAction(DeviceActions.STOP_CHARACTERISTIC_MONITORING)
+    .map<ICharacteristicState>(toPayload)
+    .mergeMap((charState) =>
+      this.bleService.stopCharacteristicMonitoring(charState.characteristic, charState.transactionId)
+        .map(() => this.ngZone.run(() => this.deviceActions.stoppedCharacteristicMonitoring(charState)))
     );
 
   constructor(

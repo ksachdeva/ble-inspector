@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
+import { ICharacteristicState } from './../state';
+
 @Injectable()
 export class DeviceActions {
 
@@ -18,6 +20,40 @@ export class DeviceActions {
 
   static START_CHARACTERISTICS_DISCOVERY = 'Start characteristics discovery';
   static CHARACTERISTICS_DISCOVERED = 'Characterisitics Discovered';
+
+  static START_CHARACTERISTIC_MONITORING = 'Start characteristics monitoring';
+  static STOP_CHARACTERISTIC_MONITORING = 'Stop characteristics monitoring';
+  static STOPPED_CHARACTERISTIC_MONITORING = 'Stopped characteristics monitoring';
+
+  static READ_CHARACTERISITC = 'Read characteristic';
+
+  readCharacteristic(payload: ICharacteristic) {
+    return {
+      type: DeviceActions.READ_CHARACTERISITC,
+      payload
+    };
+  }
+
+  startCharacteristicMonitoring(payload: ICharacteristicState) {
+    return {
+      type: DeviceActions.START_CHARACTERISTIC_MONITORING,
+      payload
+    };
+  }
+
+  stopCharacteristicMonitoring(payload: ICharacteristicState) {
+    return {
+      type: DeviceActions.STOP_CHARACTERISTIC_MONITORING,
+      payload
+    };
+  }
+
+  stoppedCharacteristicMonitoring(payload: ICharacteristicState) {
+    return {
+      type: DeviceActions.STOPPED_CHARACTERISTIC_MONITORING,
+      payload
+    };
+  }
 
   discoverCharacterisitics(payload: IService) {
     return {

@@ -8,15 +8,14 @@
 
 <ion-content padding>
     <ion-list>
-        <button ion-item *ngFor="let item of chars">
-      <div>uuid: {{ item.uuid }}</div>
-      <div>isReadable: {{ item.isReadable }}</div>
-      <div>isWritableWithResponse: {{ item.isWritableWithResponse }}</div>
-      <div>isWritableWithoutResponse: {{ item.isWritableWithoutResponse}}</div>
-      <div>isNotifiable: {{item.isNotifiable}}</div>
-      <div>value: {{ item.value}}</div>
-    </button>
-
+        <button ion-item *ngFor="let item of chars" (click)="showOptions(item)">
+        <div>uuid: {{ item.characteristic.uuid }}</div>
+        <div>isReadable: {{ item.characteristic.isReadable }}</div>
+        <div>isWritableWithResponse: {{ item.characteristic.isWritableWithResponse }}</div>
+        <div>isWritableWithoutResponse: {{ item.characteristic.isWritableWithoutResponse}}</div>
+        <div>isNotifiable: {{item.characteristic.isNotifiable}}</div>
+        <div>value: {{ item.characteristic.value}}</div>
+      </button>
     </ion-list>
 
 </ion-content>

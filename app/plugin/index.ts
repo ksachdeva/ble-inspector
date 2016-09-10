@@ -73,4 +73,17 @@ export class Central {
   static monitorDeviceDisconnect(): Observable<IDeviceInfo> {
     return;
   }
+
+  @Cordova({
+    observable: true
+  })
+  static monitorCharacteristic(options: any): Observable<ICharacteristic> {
+    return;
+  }
+
+  @Cordova()
+  static cancelTransaction(transactionId: string): Promise<void> {
+    return;
+  }
+
 }

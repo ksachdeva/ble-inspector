@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { Component, NgZone } from '@angular/core';
-import { NavController, NavParams, ViewController } from 'ionic-angular';
+import { NavController, ActionSheetController, NavParams, ViewController } from 'ionic-angular';
 import { Store } from '@ngrx/store';
 
-import { IAppState } from './../../state';
+import { IAppState, ICharacteristicState } from './../../state';
 import { ICharacteristic, IService } from './../../plugin';
 import { DeviceActions } from './../../actions';
 
@@ -13,10 +13,11 @@ import { DeviceActions } from './../../actions';
 })
 export class CharacteristicsPage {
 
-  chars: Array<ICharacteristic>;
+  chars: Array<ICharacteristicState>;
   selectedService: IService;
 
   constructor(
+    private actionSheetCtrl: ActionSheetController,
     private deviceActions: DeviceActions,
     private viewCtrl: ViewController,
     private store: Store<IAppState>,
@@ -26,20 +27,46 @@ export class CharacteristicsPage {
 
     this.selectedService = navParams.get('selectedService');
 
-    console.log(this.selectedService);
-
-    /*viewCtrl.didEnter.subscribe(() => {
-      this.deviceActions.discoverCharacterisitics(this.selectedService);
-    });*/
-
     const chars$ = store.select(s => s.device.chars);
     chars$.subscribe(characterisitics => {
-      this.chars = _.filter(characterisitics, (c) => c.serviceUUID === this.selectedService.uuid);
+      this.chars = _.filter(characterisitics, (c) => c.characteristic.serviceUUID === this.selectedService.uuid);
     });
   }
 
   ngOnInit() {
     this.store.dispatch(this.deviceActions.discoverCharacterisitics(this.selectedService));
+  }
+
+  startMonitoring(charState: ICharacteristicState) {
+    this.store.dispatch(this.deviceActions.startCharacteristicMonitoring(charState));
+  }
+
+  showOptions(charState: ICharacteristicState) {
+
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Select',
+      buttons: [
+        {
+          text: 'Monitor',
+          handler: () => {
+            this.startMonitoring(charState);
+          }
+        }, {
+          text: 'Read',
+          handler: () => {
+            console.log('Archive clicked');
+          }
+        }, {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+
+    actionSheet.present();
   }
 
 }

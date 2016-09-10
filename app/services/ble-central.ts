@@ -45,6 +45,19 @@ export class BLECentralService {
     return Central.monitorDeviceDisconnect();
   }
 
+  monitorCharacteristic(characteristic: ICharacteristic, transactionId: string): Observable<ICharacteristic> {
+    return Central.monitorCharacteristic({
+      deviceId: characteristic.deviceUUID,
+      serviceUUID: characteristic.serviceUUID,
+      charUUID: characteristic.uuid,
+      transactionId: transactionId
+    });
+  }
+
+  stopCharacteristicMonitoring(characteristic: ICharacteristic, transactionId: string): Observable<void> {
+    return Observable.fromPromise(Central.cancelTransaction(transactionId));
+  }
+
   discoverServices(device: IDeviceInfo): Observable<Array<IService>> {
     return Observable.fromPromise(Central.discoverServices({
       deviceId: device.uuid
