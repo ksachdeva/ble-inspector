@@ -31,6 +31,15 @@ export class DeviceActions {
   static START_WRITING_CHARACTERISITIC = 'Start writing characteristic';
   static WROTE_CHRACTERISTIC = 'Wrote characteristic';
 
+  static BLE_ERROR = 'Ble error';
+
+  bleError(payload: any) {
+    return {
+      type: DeviceActions.BLE_ERROR,
+      payload
+    };
+  }
+
   startWritingCharacteristic(payload: ICharacteristicState, value: string, withResponse: boolean) {
     return {
       type: DeviceActions.START_WRITING_CHARACTERISITIC,
