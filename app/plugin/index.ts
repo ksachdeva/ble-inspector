@@ -86,4 +86,14 @@ export class Central {
     return;
   }
 
+  @Cordova()
+  static readCharacteristic(options: any): Promise<ICharacteristic> {
+    return;
+  }
+
+  @Cordova()
+  static writeCharacteristic(options: any): Promise<ICharacteristic> {
+    return;
+  }
+
 }

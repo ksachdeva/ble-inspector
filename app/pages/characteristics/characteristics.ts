@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { Component, NgZone } from '@angular/core';
-import { NavController, ActionSheetController, NavParams, ViewController } from 'ionic-angular';
+import { NavController, AlertController, ActionSheetController, NavParams, ViewController } from 'ionic-angular';
 import { Store } from '@ngrx/store';
 
 import { IAppState, ICharacteristicState } from './../../state';
@@ -15,8 +15,10 @@ export class CharacteristicsPage {
 
   chars: Array<ICharacteristicState>;
   selectedService: IService;
+  connected$: Observable<boolean>;
 
   constructor(
+    private alertCtrl: AlertController,
     private actionSheetCtrl: ActionSheetController,
     private deviceActions: DeviceActions,
     private viewCtrl: ViewController,
@@ -26,6 +28,8 @@ export class CharacteristicsPage {
     private ngZone: NgZone) {
 
     this.selectedService = navParams.get('selectedService');
+
+    this.connected$ = store.select(s => s.device.connected);
 
     const chars$ = store.select(s => s.device.chars);
     chars$.subscribe(characterisitics => {
@@ -43,6 +47,40 @@ export class CharacteristicsPage {
 
   stopMonitoring(charState: ICharacteristicState) {
     this.store.dispatch(this.deviceActions.stopCharacteristicMonitoring(charState));
+  }
+
+  readCharacteristic(charState: ICharacteristicState) {
+    this.store.dispatch(this.deviceActions.startReadingCharacteristic(charState));
+  }
+
+  writeCharacteristic(charState: ICharacteristicState) {
+
+    let prompt = this.alertCtrl.create({
+      title: 'Characteristic Value',
+      message: 'Enter hex string as the value',
+      inputs: [
+        {
+          name: 'Value',
+          placeholder: '010203'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            this.store.dispatch(this.deviceActions.startWritingCharacteristic(charState, data.Value, false));
+          }
+        }
+      ]
+    });
+
+    prompt.present();
   }
 
   showOptions(charState: ICharacteristicState) {
@@ -64,9 +102,9 @@ export class CharacteristicsPage {
         }, {
           text: 'Read',
           handler: () => {
-            console.log('Archive clicked');
+            this.readCharacteristic(charState);
           }
-        }, {
+        },  {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {

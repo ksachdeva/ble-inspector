@@ -71,4 +71,24 @@ export class BLECentralService {
     }));
   }
 
+  readCharacteristic(characteristic: ICharacteristic, transactionId: string): Observable<ICharacteristic> {
+    return Observable.fromPromise(Central.readCharacteristic({
+      deviceId: characteristic.deviceUUID,
+      serviceUUID: characteristic.serviceUUID,
+      charUUID: characteristic.uuid,
+      transactionId: transactionId
+    }));
+  }
+
+  writeCharacteristic(characteristic: ICharacteristic, value: string, response: boolean, transactionId: string): Observable<ICharacteristic> {
+    return Observable.fromPromise(Central.writeCharacteristic({
+      deviceId: characteristic.deviceUUID,
+      serviceUUID: characteristic.serviceUUID,
+      charUUID: characteristic.uuid,
+      transactionId: transactionId,
+      value: value,
+      withResponse: response
+    }));
+  }
+
 }

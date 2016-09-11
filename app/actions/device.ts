@@ -25,7 +25,36 @@ export class DeviceActions {
   static STOP_CHARACTERISTIC_MONITORING = 'Stop characteristics monitoring';
   static STOPPED_CHARACTERISTIC_MONITORING = 'Stopped characteristics monitoring';
 
+  static START_READING_CHARACTERISITIC = 'Start reading characteristic';
   static READ_CHARACTERISITC = 'Read characteristic';
+
+  static START_WRITING_CHARACTERISITIC = 'Start writing characteristic';
+  static WROTE_CHRACTERISTIC = 'Wrote characteristic';
+
+  startWritingCharacteristic(payload: ICharacteristicState, value: string, withResponse: boolean) {
+    return {
+      type: DeviceActions.START_WRITING_CHARACTERISITIC,
+      payload: {
+        charState: payload,
+        value: value,
+        withResponse: withResponse
+      }
+    };
+  }
+
+  wroteCharacteristic(payload: ICharacteristic) {
+    return {
+      type: DeviceActions.WROTE_CHRACTERISTIC,
+      payload
+    };
+  }
+
+  startReadingCharacteristic(payload: ICharacteristicState) {
+    return {
+      type: DeviceActions.START_READING_CHARACTERISITIC,
+      payload
+    };
+  }
 
   readCharacteristic(payload: ICharacteristic) {
     return {

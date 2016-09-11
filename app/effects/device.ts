@@ -72,6 +72,22 @@ export class DeviceEffects {
         .map(() => this.ngZone.run(() => this.deviceActions.stoppedCharacteristicMonitoring(charState)))
     );
 
+  @Effect() readCharacteristic$ = this.updates$
+    .whenAction(DeviceActions.START_READING_CHARACTERISITIC)
+    .map<ICharacteristicState>(toPayload)
+    .mergeMap((charState) =>
+      this.bleService.readCharacteristic(charState.characteristic, charState.transactionId)
+        .map((res) => this.ngZone.run(() => this.deviceActions.readCharacteristic(res)))
+    );
+
+  @Effect() writeCharacteristic$ = this.updates$
+    .whenAction(DeviceActions.START_WRITING_CHARACTERISITIC)
+    .map<{ charState: ICharacteristicState; value: string; withResponse: boolean; }>(toPayload)
+    .mergeMap((payload) =>
+      this.bleService.writeCharacteristic(payload.charState.characteristic, payload.value, payload.withResponse, payload.charState.transactionId)
+        .map((res) => this.ngZone.run(() => this.deviceActions.wroteCharacteristic(res)))
+    );
+
   constructor(
     private updates$: StateUpdates<IAppState>,
     private ngZone: NgZone,

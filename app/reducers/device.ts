@@ -93,6 +93,7 @@ export default function(state = initialState, action: Action): IDeviceState {
     case DeviceActions.CHARACTERISTICS_DISCOVERED:
       return charsDiscovered(state, action.payload);
     case DeviceActions.START_CHARACTERISTIC_MONITORING:
+    case DeviceActions.START_READING_CHARACTERISITIC:
       return startCharacteristicMonitoring(state, action.payload);
     case DeviceActions.STOPPED_CHARACTERISTIC_MONITORING:
       return stoppedCharacteristicMonitoring(state, action.payload);
