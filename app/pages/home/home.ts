@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Component, NgZone } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from './../../state';
@@ -20,6 +20,7 @@ export class HomePage {
   devices$: Observable<Array<IDeviceInfo>>;
 
   constructor(
+    private platform: Platform,
     private store: Store<IAppState>,
     private scanActions: ScanActions,
     private navCtrl: NavController,
@@ -40,7 +41,11 @@ export class HomePage {
         return permission && scanning;
       });
 
-    this.store.dispatch(this.scanActions.requestPermission());
+    if (platform.is('android')) {
+      this.store.dispatch(this.scanActions.requestPermission());
+    } else {
+      this.store.dispatch(this.scanActions.permissionGranted());
+    }
   }
 
   startScan() {
