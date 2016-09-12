@@ -7,6 +7,20 @@ import { ICharacteristicState } from './../state';
 @Injectable()
 export class DeviceActions {
 
+  static PERMISSION_REQUEST = 'Request Permission';
+  static PERMISSION_GRANTED = 'Permission Granted';
+  static PERMISSION_DENIED = 'Permission Denied';
+
+  static START_SCAN = 'Start Scan';
+  static STARTED_SCAN = 'Started Scan';
+  static START_SCAN_FAILED = 'Start Scan Failed';
+
+  static STOP_SCAN = 'Stop Scan';
+  static STOPPED_SCAN = 'Stopped Scan';
+  static STOP_SCAN_FAILED = 'Stop Scan Failed';
+
+  static ADD_DEVICE_INFO = 'Add Device Info';
+
   static CONNECT_TO_DEVICE = 'Connect to Device';
   static CONNECTION_TO_DEVICE_FAILED = 'Connection to Device failed';
   static CONNECTED_TO_DEVICE = 'Connected to Device';
@@ -37,6 +51,55 @@ export class DeviceActions {
   static START_STATE_MONITOR = 'Start state monitoring';
   static GET_CURRENT_STATE = 'Get current state';
   static BLE_STATE_CHANGE = 'Bluetooth state changed';
+
+  addDeviceInfo(payload: IDeviceInfo) {
+    return {
+      type: DeviceActions.ADD_DEVICE_INFO,
+      payload
+    };
+  }
+
+  requestPermission() {
+    return {
+      type: DeviceActions.PERMISSION_REQUEST
+    };
+  }
+
+  permissionGranted() {
+    return {
+      type: DeviceActions.PERMISSION_GRANTED
+    };
+  }
+
+  permissionDenied() {
+    return {
+      type: DeviceActions.PERMISSION_DENIED
+    };
+  }
+
+  startScan() {
+    return {
+      type: DeviceActions.START_SCAN
+    };
+  }
+
+  startedScan() {
+    return {
+      type: DeviceActions.STARTED_SCAN
+    };
+  }
+
+  stopScan() {
+    return {
+      type: DeviceActions.STOP_SCAN
+    };
+  }
+
+  stoppedScan() {
+    return {
+      type: DeviceActions.STOPPED_SCAN
+    };
+  }
 
   getCurrentState() {
     return {

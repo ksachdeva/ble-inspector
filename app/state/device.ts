@@ -8,6 +8,9 @@ export interface ICharacteristicState {
 
 export interface IDeviceState {
   bleState: BluetoothState;
+  scanning: boolean;
+  permission: boolean;
+  devices: Array<IDeviceInfo>;
   deviceInfo: IDeviceInfo;
   connecting: boolean;
   connected: boolean;

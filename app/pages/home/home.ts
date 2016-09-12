@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { BluetoothState } from './../../enums';
 import { IAppState } from './../../state';
 import { IDeviceInfo } from './../../plugin';
-import { DeviceActions, ScanActions } from './../../actions';
+import { DeviceActions } from './../../actions';
 
 import { ServicesPage } from './../services/services';
 
@@ -23,14 +23,13 @@ export class HomePage {
   constructor(
     private platform: Platform,
     private store: Store<IAppState>,
-    private scanActions: ScanActions,
     private deviceActions: DeviceActions,
     private navCtrl: NavController) {
 
-    this.devices$ = store.select(s => s.scan.devices);
+    this.devices$ = store.select(s => s.device.devices);
 
-    const permission$ = store.select(s => s.scan.permission);
-    const scanning$ = store.select(s => s.scan.scanning);
+    const permission$ = store.select(s => s.device.permission);
+    const scanning$ = store.select(s => s.device.scanning);
     const bleState$ = store.select(s => s.device.bleState);
 
     const changeDetector = function(permission: boolean, scanning: boolean, bleState: BluetoothState) {
@@ -49,21 +48,21 @@ export class HomePage {
     platform.ready().then(() => {
 
       if (platform.is('android')) {
-        this.store.dispatch(this.scanActions.requestPermission());
+        this.store.dispatch(this.deviceActions.requestPermission());
         this.store.dispatch(this.deviceActions.bleStateChanged(BluetoothState.PoweredOn));
       } else {
-        this.store.dispatch(this.scanActions.permissionGranted());
+        this.store.dispatch(this.deviceActions.permissionGranted());
         this.store.dispatch(this.deviceActions.startStateMonitoring());
       }
     });
   }
 
   startScan() {
-    this.store.dispatch(this.scanActions.startScan());
+    this.store.dispatch(this.deviceActions.startScan());
   }
 
   stopScan() {
-    this.store.dispatch(this.scanActions.stopScan());
+    this.store.dispatch(this.deviceActions.stopScan());
   }
 
   connectToDevice(device: IDeviceInfo) {

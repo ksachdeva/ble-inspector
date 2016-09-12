@@ -2,6 +2,7 @@ import 'rxjs';
 import { Injectable } from '@angular/core';
 import { Effect, StateUpdates, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { Diagnostic } from 'ionic-native';
 
 import { IDeviceInfo, IService } from './../plugin';
 import { DeviceActions } from './../actions/device';
@@ -10,6 +11,36 @@ import { BLECentralService } from './../services/ble-central';
 
 @Injectable()
 export class DeviceEffects {
+
+  @Effect() requestPermission$ = this.updates$
+    .whenAction(DeviceActions.PERMISSION_REQUEST)
+    .mergeMap(() =>
+      this.bleService.requestRuntimePermission()
+        .map(res => {
+          if (res === Diagnostic.permissionStatus.GRANTED) {
+            return this.deviceActions.permissionGranted();
+          } else {
+            return this.deviceActions.permissionDenied();
+          }
+        })
+    );
+
+  @Effect() startScan$ = this.updates$
+    .whenAction(DeviceActions.START_SCAN)
+    .mergeMap(() =>
+      this.bleService.startScan()
+        .map(res => this.deviceActions.addDeviceInfo(res))
+        .catch(err => Observable.of(this.deviceActions.bleError(err)))
+    );
+
+  @Effect() stopScan$ = this.updates$
+    .whenAction(DeviceActions.STOP_SCAN)
+    .mergeMap(() =>
+      this.bleService.stopScan()
+        .map(res => this.deviceActions.stoppedScan())
+        .catch(err => Observable.of(this.deviceActions.bleError(err)))
+    );
+
 
   @Effect() connectToDevice$ = this.updates$
     .whenAction(DeviceActions.CONNECT_TO_DEVICE)
