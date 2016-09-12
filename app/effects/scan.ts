@@ -1,11 +1,11 @@
 import 'rxjs';
 import { Injectable, NgZone } from '@angular/core';
-import { Action } from '@ngrx/store';
-import { Effect, StateUpdates, toPayload } from '@ngrx/effects';
+import { Effect, StateUpdates } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Diagnostic } from 'ionic-native';
 
 import { ScanActions } from './../actions/scan';
+import { DeviceActions } from './../actions/device';
 import { IAppState } from './../state';
 import { BLECentralService } from './../services/ble-central';
 
@@ -30,6 +30,7 @@ export class ScanEffects {
     .mergeMap(() =>
       this.bleService.startScan()
         .map(res => this.ngZone.run(() => this.scanActions.addDeviceInfo(res)))
+        .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
   @Effect() stopScan$ = this.updates$
@@ -37,6 +38,7 @@ export class ScanEffects {
     .mergeMap(() =>
       this.bleService.stopScan()
         .map(res => this.ngZone.run(() => this.scanActions.stoppedScan()))
+        .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
 
@@ -44,6 +46,7 @@ export class ScanEffects {
     private updates$: StateUpdates<IAppState>,
     private ngZone: NgZone,
     private scanActions: ScanActions,
+    private deviceActions: DeviceActions,
     private bleService: BLECentralService
   ) { }
 
