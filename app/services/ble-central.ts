@@ -14,21 +14,22 @@ export class BLECentralService {
 
   requestRuntimePermission(): Observable<string> {
     const permission = Diagnostic.permission.ACCESS_COARSE_LOCATION;
-    return Observable.fromPromise(Diagnostic.requestRuntimePermission(permission));
+    return Observable.fromPromise(Diagnostic.requestRuntimePermission(permission)).enterZone(this.ngZone);
   }
 
   startScan(): Observable<IDeviceInfo> {
-    return Central.startDeviceScan(null);
+    return Central.startDeviceScan(null)
+      .enterZone(this.ngZone);
   }
 
   stopScan(): Observable<any> {
-    return Observable.fromPromise(Central.stopScan());
+    return Observable.fromPromise(Central.stopScan()).enterZone(this.ngZone);
   }
 
   connectToDevice(device: IDeviceInfo): Observable<IDeviceInfo> {
     return Observable.fromPromise(Central.connectToDevice({
       deviceId: device.uuid
-    }));
+    })).enterZone(this.ngZone);
   }
 
   disconnectDevice(device: IDeviceInfo): Observable<IDeviceInfo> {
@@ -40,11 +41,11 @@ export class BLECentralService {
   isDeviceConnected(device: IDeviceInfo): Observable<boolean> {
     return Observable.fromPromise(Central.isDeviceConnected({
       deviceId: device.uuid
-    }));
+    })).enterZone(this.ngZone);
   }
 
   monitorDeviceDisconnect(): Observable<IDeviceInfo> {
-    return Central.monitorDeviceDisconnect();
+    return Central.monitorDeviceDisconnect().enterZone(this.ngZone);
   }
 
   monitorCharacteristic(characteristic: ICharacteristic, transactionId: string): Observable<ICharacteristic> {
@@ -75,6 +76,7 @@ export class BLECentralService {
 
   getState(): Observable<BluetoothState> {
     return Observable.fromPromise(Central.getState())
+      .enterZone(this.ngZone)
       .map(state => this._mapToBluetoothState(state));
   }
 
@@ -85,20 +87,21 @@ export class BLECentralService {
   }
 
   stopCharacteristicMonitoring(characteristic: ICharacteristic, transactionId: string): Observable<void> {
-    return Observable.fromPromise(Central.cancelTransaction(transactionId));
+    return Observable.fromPromise(Central.cancelTransaction(transactionId))
+      .enterZone(this.ngZone);
   }
 
   discoverServices(device: IDeviceInfo): Observable<Array<IService>> {
     return Observable.fromPromise(Central.discoverServices({
       deviceId: device.uuid
-    }));
+    })).enterZone(this.ngZone);
   }
 
   discoverCharacteristics(service: IService): Observable<Array<ICharacteristic>> {
     return Observable.fromPromise(Central.discoverCharacteristics({
       deviceId: service.deviceUUID,
       serviceUUID: service.uuid
-    }));
+    })).enterZone(this.ngZone);
   }
 
   readCharacteristic(characteristic: ICharacteristic, transactionId: string): Observable<ICharacteristic> {
@@ -107,7 +110,7 @@ export class BLECentralService {
       serviceUUID: characteristic.serviceUUID,
       charUUID: characteristic.uuid,
       transactionId: transactionId
-    }));
+    })).enterZone(this.ngZone);
   }
 
   writeCharacteristic(characteristic: ICharacteristic, value: string, response: boolean, transactionId: string): Observable<ICharacteristic> {
@@ -118,7 +121,7 @@ export class BLECentralService {
       transactionId: transactionId,
       value: value,
       withResponse: response
-    }));
+    })).enterZone(this.ngZone);
   }
 
 }

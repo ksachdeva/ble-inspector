@@ -1,5 +1,5 @@
 import 'rxjs';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Effect, StateUpdates, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
@@ -16,7 +16,7 @@ export class DeviceEffects {
     .map<IDeviceInfo>(toPayload)
     .mergeMap((deviceInfo) =>
       this.bleService.connectToDevice(deviceInfo)
-        .map(res => this.ngZone.run(() => this.deviceActions.connectedToDevice(res)))
+        .map((res) => this.deviceActions.connectedToDevice(res))
         .catch(err => Observable.of(this.deviceActions.failedToConnectDevice(deviceInfo, err)))
     );
 
@@ -25,7 +25,7 @@ export class DeviceEffects {
     .map<IDeviceInfo>(toPayload)
     .mergeMap((deviceInfo) =>
       this.bleService.disconnectDevice(deviceInfo)
-        .map(res => this.ngZone.run(() => this.deviceActions.deviceDisconnected(res)))
+        .map((res) => this.deviceActions.deviceDisconnected(res))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -33,7 +33,7 @@ export class DeviceEffects {
     .whenAction(DeviceActions.MONITOR_DEVICE_DISCONNECT)
     .mergeMap((deviceInfo) =>
       this.bleService.monitorDeviceDisconnect()
-        .map(res => this.ngZone.run(() => this.deviceActions.deviceDisconnected(res)))
+        .map((res) => this.deviceActions.deviceDisconnected(res))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -47,7 +47,7 @@ export class DeviceEffects {
     .map<IDeviceInfo>(toPayload)
     .mergeMap((deviceInfo) =>
       this.bleService.discoverServices(deviceInfo)
-        .map(res => this.ngZone.run(() => this.deviceActions.discoveredServices(res)))
+        .map(res => this.deviceActions.discoveredServices(res))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -56,7 +56,7 @@ export class DeviceEffects {
     .map<IService>(toPayload)
     .mergeMap((service) =>
       this.bleService.discoverCharacteristics(service)
-        .map(res => this.ngZone.run(() => this.deviceActions.discoveredCharacteristics(res)))
+        .map(res => this.deviceActions.discoveredCharacteristics(res))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -65,7 +65,7 @@ export class DeviceEffects {
     .map<ICharacteristicState>(toPayload)
     .mergeMap((charState) =>
       this.bleService.monitorCharacteristic(charState.characteristic, charState.transactionId)
-        .map(res => this.ngZone.run(() => this.deviceActions.readCharacteristic(res)))
+        .map(res => this.deviceActions.readCharacteristic(res))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -74,7 +74,7 @@ export class DeviceEffects {
     .map<ICharacteristicState>(toPayload)
     .mergeMap((charState) =>
       this.bleService.stopCharacteristicMonitoring(charState.characteristic, charState.transactionId)
-        .map(() => this.ngZone.run(() => this.deviceActions.stoppedCharacteristicMonitoring(charState)))
+        .map(() => this.deviceActions.stoppedCharacteristicMonitoring(charState))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -83,7 +83,7 @@ export class DeviceEffects {
     .map<ICharacteristicState>(toPayload)
     .mergeMap((charState) =>
       this.bleService.readCharacteristic(charState.characteristic, charState.transactionId)
-        .map((res) => this.ngZone.run(() => this.deviceActions.readCharacteristic(res)))
+        .map((res) => this.deviceActions.readCharacteristic(res))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -92,7 +92,7 @@ export class DeviceEffects {
     .map<{ charState: ICharacteristicState; value: string; withResponse: boolean; }>(toPayload)
     .mergeMap((payload) =>
       this.bleService.writeCharacteristic(payload.charState.characteristic, payload.value, payload.withResponse, payload.charState.transactionId)
-        .map((res) => this.ngZone.run(() => this.deviceActions.wroteCharacteristic(res)))
+        .map((res) => this.deviceActions.wroteCharacteristic(res))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -100,7 +100,7 @@ export class DeviceEffects {
     .whenAction(DeviceActions.GET_CURRENT_STATE)
     .mergeMap(() =>
       this.bleService.getState()
-        .map((res) => this.ngZone.run(() => this.deviceActions.bleStateChanged(res)))
+        .map((res) => this.deviceActions.bleStateChanged(res))
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
@@ -114,7 +114,6 @@ export class DeviceEffects {
 
   constructor(
     private updates$: StateUpdates<IAppState>,
-    private ngZone: NgZone,
     private deviceActions: DeviceActions,
     private bleService: BLECentralService
   ) { }

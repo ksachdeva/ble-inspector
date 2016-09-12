@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Component, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 import { Store } from '@ngrx/store';
 
@@ -25,8 +25,7 @@ export class HomePage {
     private store: Store<IAppState>,
     private scanActions: ScanActions,
     private deviceActions: DeviceActions,
-    private navCtrl: NavController,
-    private ngZone: NgZone) {
+    private navCtrl: NavController) {
 
     this.devices$ = store.select(s => s.scan.devices);
 
