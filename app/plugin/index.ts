@@ -96,4 +96,16 @@ export class Central {
     return;
   }
 
+  @Cordova()
+  static getState(): Promise<string> {
+    return;
+  }
+
+  @Cordova({
+    observable: true
+  })
+  static monitorState(): Observable<string> {
+    return;
+  }
+
 }

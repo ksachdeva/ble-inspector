@@ -1,3 +1,4 @@
+import { BluetoothState } from './../enums';
 import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
 export interface ICharacteristicState {
@@ -6,6 +7,7 @@ export interface ICharacteristicState {
 }
 
 export interface IDeviceState {
+  bleState: BluetoothState;
   deviceInfo: IDeviceInfo;
   connecting: boolean;
   connected: boolean;

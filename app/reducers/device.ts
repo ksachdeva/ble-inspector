@@ -1,11 +1,13 @@
 import * as _ from 'lodash';
 import { Action } from '@ngrx/store';
 
+import { BluetoothState } from './../enums';
 import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 import { IDeviceState, ICharacteristicState } from './../state/device';
 import { DeviceActions } from './../actions/device';
 
 const initialState: IDeviceState = {
+  bleState: BluetoothState.Unknown,
   deviceInfo: null,
   connected: false,
   connecting: false,
@@ -78,8 +80,16 @@ function readCharacterisitic(state = initialState, payload: ICharacteristic) {
   return state;
 }
 
+function bleStateChange(state = initialState, payload: BluetoothState) {
+  return Object.assign({}, state, {
+    bleState: payload
+  });
+}
+
 export default function(state = initialState, action: Action): IDeviceState {
   switch (action.type) {
+    case DeviceActions.BLE_STATE_CHANGE:
+      return bleStateChange(state, action.payload);
     case DeviceActions.CONNECT_TO_DEVICE:
       return connectToDevice(state, action.payload);
     case DeviceActions.CONNECTED_TO_DEVICE:

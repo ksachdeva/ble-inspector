@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
+import { BluetoothState } from './../enums';
 import { ICharacteristicState } from './../state';
 
 @Injectable()
@@ -32,6 +33,29 @@ export class DeviceActions {
   static WROTE_CHRACTERISTIC = 'Wrote characteristic';
 
   static BLE_ERROR = 'Ble error';
+
+  static START_STATE_MONITOR = 'Start state monitoring';
+  static GET_CURRENT_STATE = 'Get current state';
+  static BLE_STATE_CHANGE = 'Bluetooth state changed';
+
+  getCurrentState() {
+    return {
+      type: DeviceActions.GET_CURRENT_STATE
+    };
+  }
+
+  startStateMonitoring() {
+    return {
+      type: DeviceActions.START_STATE_MONITOR
+    };
+  }
+
+  bleStateChanged(payload: BluetoothState) {
+    return {
+      type: DeviceActions.BLE_STATE_CHANGE,
+      payload
+    };
+  }
 
   bleError(payload: any) {
     return {

@@ -1,7 +1,9 @@
 import { Observable } from 'rxjs';
 import { Injectable, NgZone } from '@angular/core';
 import { Diagnostic } from 'ionic-native';
+import '@ngrx/core/add/operator/enterZone';
 
+import { BluetoothState } from './../enums';
 import { Central, IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
 @Injectable()
@@ -52,6 +54,34 @@ export class BLECentralService {
       charUUID: characteristic.uuid,
       transactionId: transactionId
     });
+  }
+
+  _mapToBluetoothState(state: string): BluetoothState {
+    switch (state) {
+      case 'Unknown':
+        return BluetoothState.Unknown;
+      case 'Resetting':
+        return BluetoothState.Resetting;
+      case 'Unsupported':
+        return BluetoothState.Unsupported;
+      case 'Unauthorized':
+        return BluetoothState.Unauthorized;
+      case 'PoweredOff':
+        return BluetoothState.PoweredOff;
+      case 'PoweredOn':
+        return BluetoothState.PoweredOn;
+    }
+  }
+
+  getState(): Observable<BluetoothState> {
+    return Observable.fromPromise(Central.getState())
+      .map(state => this._mapToBluetoothState(state));
+  }
+
+  monitorState(): Observable<BluetoothState> {
+    return Central.monitorState()
+      .enterZone(this.ngZone)
+      .map(state => this._mapToBluetoothState(state));
   }
 
   stopCharacteristicMonitoring(characteristic: ICharacteristic, transactionId: string): Observable<void> {

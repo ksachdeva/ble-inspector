@@ -96,6 +96,22 @@ export class DeviceEffects {
         .catch(err => Observable.of(this.deviceActions.bleError(err)))
     );
 
+  @Effect() getState$ = this.updates$
+    .whenAction(DeviceActions.GET_CURRENT_STATE)
+    .mergeMap(() =>
+      this.bleService.getState()
+        .map((res) => this.ngZone.run(() => this.deviceActions.bleStateChanged(res)))
+        .catch(err => Observable.of(this.deviceActions.bleError(err)))
+    );
+
+  @Effect() monitorStateChange$ = this.updates$
+    .whenAction(DeviceActions.START_STATE_MONITOR)
+    .mergeMap(() =>
+      this.bleService.monitorState()
+        .map((res) => this.deviceActions.bleStateChanged(res))
+        .catch(err => Observable.of(this.deviceActions.bleError(err)))
+    );
+
   constructor(
     private updates$: StateUpdates<IAppState>,
     private ngZone: NgZone,
