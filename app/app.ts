@@ -28,21 +28,7 @@ export class MyApp {
     platform: Platform) {
 
     const combinedEpics = combineEpics<Action>(
-      deviceEpics.requestPermission$,
-      deviceEpics.startScan$,
-      deviceEpics.stopScan$,
-      deviceEpics.connectToDevice$,
-      deviceEpics.disconnectDevice$,
-      deviceEpics.monitorDisconnect$,
-      deviceEpics.deviceConnected$,
-      deviceEpics.discoverServices$,
-      deviceEpics.discoverCharacterisitics$,
-      deviceEpics.monitorCharacteristic$,
-      deviceEpics.stopCharacteristicMonitoring$,
-      deviceEpics.readCharacteristic$,
-      deviceEpics.writeCharacteristic$,
-      deviceEpics.getState$,
-      deviceEpics.monitorStateChange$
+      ...deviceEpics.epics
     );
 
     const middleware = [

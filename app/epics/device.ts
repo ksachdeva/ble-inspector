@@ -16,7 +16,7 @@ function toPayload(action: Action): any {
 @Injectable()
 export class DeviceEpics {
 
-  requestPermission$ = (action$: ActionsObservable<Action>) =>
+  private requestPermission$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.PERMISSION_REQUEST)
       .mergeMap(() =>
         this.bleService.requestRuntimePermission()
@@ -29,7 +29,7 @@ export class DeviceEpics {
           })
       );
 
-  startScan$ = (action$: ActionsObservable<Action>) =>
+  private startScan$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_SCAN)
       .mergeMap(() =>
         this.bleService.startScan()
@@ -37,7 +37,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  stopScan$ = (action$: ActionsObservable<Action>) =>
+  private stopScan$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.STOP_SCAN)
       .mergeMap(() =>
         this.bleService.stopScan()
@@ -45,7 +45,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  connectToDevice$ = (action$: ActionsObservable<Action>) =>
+  private connectToDevice$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.CONNECT_TO_DEVICE)
       .map<IDeviceInfo>(toPayload)
       .mergeMap((deviceInfo) =>
@@ -54,7 +54,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.failedToConnectDevice(deviceInfo, err)))
       );
 
-  disconnectDevice$ = (action$: ActionsObservable<Action>) =>
+  private disconnectDevice$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.DISCONNECT_DEVICE)
       .map<IDeviceInfo>(toPayload)
       .mergeMap((deviceInfo) =>
@@ -63,7 +63,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  monitorDisconnect$ = (action$: ActionsObservable<Action>) =>
+  private monitorDisconnect$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.MONITOR_DEVICE_DISCONNECT)
       .mergeMap(() =>
         this.bleService.monitorDeviceDisconnect()
@@ -71,12 +71,12 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  deviceConnected$ = (action$: ActionsObservable<Action>) =>
+  private deviceConnected$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.CONNECTED_TO_DEVICE)
       .map<IDeviceInfo>(toPayload)
       .map((deviceInfo) => this.deviceActions.discoverServices(deviceInfo));
 
-  discoverServices$ = (action$: ActionsObservable<Action>) =>
+  private discoverServices$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_SERVICE_DISCOVERY)
       .map<IDeviceInfo>(toPayload)
       .mergeMap((deviceInfo) =>
@@ -85,7 +85,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  discoverCharacterisitics$ = (action$: ActionsObservable<Action>) =>
+  private discoverCharacterisitics$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_CHARACTERISTICS_DISCOVERY)
       .map<IService>(toPayload)
       .mergeMap((service) =>
@@ -94,7 +94,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  monitorCharacteristic$ = (action$: ActionsObservable<Action>) =>
+  private monitorCharacteristic$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_CHARACTERISTIC_MONITORING)
       .map<ICharacteristicState>(toPayload)
       .mergeMap((charState) =>
@@ -104,7 +104,7 @@ export class DeviceEpics {
       );
 
 
-  stopCharacteristicMonitoring$ = (action$: ActionsObservable<Action>) =>
+  private stopCharacteristicMonitoring$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.STOP_CHARACTERISTIC_MONITORING)
       .map<ICharacteristicState>(toPayload)
       .mergeMap((charState) =>
@@ -113,7 +113,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  readCharacteristic$ = (action$: ActionsObservable<Action>) =>
+  private readCharacteristic$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_READING_CHARACTERISITIC)
       .map<ICharacteristicState>(toPayload)
       .mergeMap((charState) =>
@@ -122,7 +122,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  writeCharacteristic$ = (action$: ActionsObservable<Action>) =>
+  private writeCharacteristic$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_WRITING_CHARACTERISITIC)
       .map<{ charState: ICharacteristicState; value: string; withResponse: boolean; }>(toPayload)
       .mergeMap((payload) =>
@@ -131,7 +131,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  getState$ = (action$: ActionsObservable<Action>) =>
+  private getState$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.GET_CURRENT_STATE)
       .mergeMap(() =>
         this.bleService.getState()
@@ -139,13 +139,31 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  monitorStateChange$ = (action$: ActionsObservable<Action>) =>
+  private monitorStateChange$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_STATE_MONITOR)
       .mergeMap(() =>
         this.bleService.monitorState()
           .map((res) => this.deviceActions.bleStateChanged(res))
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
+
+  epics = [
+    this.requestPermission$,
+    this.startScan$,
+    this.stopScan$,
+    this.connectToDevice$,
+    this.disconnectDevice$,
+    this.monitorDisconnect$,
+    this.deviceConnected$,
+    this.discoverServices$,
+    this.discoverCharacterisitics$,
+    this.monitorCharacteristic$,
+    this.stopCharacteristicMonitoring$,
+    this.readCharacteristic$,
+    this.writeCharacteristic$,
+    this.getState$,
+    this.monitorStateChange$
+  ];
 
   constructor(
     private deviceActions: DeviceActions,
