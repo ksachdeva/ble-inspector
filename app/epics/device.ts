@@ -6,8 +6,12 @@ import { ActionsObservable } from 'redux-observable';
 import { IDeviceInfo, IService } from './../plugin';
 import { DeviceActions } from './../actions/device';
 import { Action } from './../actions';
-import { IAppState, ICharacteristicState } from './../state';
+import { ICharacteristicState } from './../state';
 import { BLECentralService } from './../services/ble-central';
+
+function toPayload(action: Action): any {
+  return action.payload;
+}
 
 @Injectable()
 export class DeviceEpics {
@@ -43,7 +47,7 @@ export class DeviceEpics {
 
   connectToDevice$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.CONNECT_TO_DEVICE)
-      .map(action => action.payload)
+      .map<IDeviceInfo>(toPayload)
       .mergeMap((deviceInfo) =>
         this.bleService.connectToDevice(deviceInfo)
           .map((res) => this.deviceActions.connectedToDevice(res))
@@ -52,7 +56,7 @@ export class DeviceEpics {
 
   disconnectDevice$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.DISCONNECT_DEVICE)
-      .map(action => action.payload)
+      .map<IDeviceInfo>(toPayload)
       .mergeMap((deviceInfo) =>
         this.bleService.disconnectDevice(deviceInfo)
           .map((res) => this.deviceActions.deviceDisconnected(res))
@@ -61,7 +65,7 @@ export class DeviceEpics {
 
   monitorDisconnect$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.MONITOR_DEVICE_DISCONNECT)
-      .mergeMap((deviceInfo) =>
+      .mergeMap(() =>
         this.bleService.monitorDeviceDisconnect()
           .map((res) => this.deviceActions.deviceDisconnected(res))
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
@@ -69,12 +73,12 @@ export class DeviceEpics {
 
   deviceConnected$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.CONNECTED_TO_DEVICE)
-      .map(action => action.payload)
-      .map(deviceInfo => this.deviceActions.discoverServices(deviceInfo));
+      .map<IDeviceInfo>(toPayload)
+      .map((deviceInfo) => this.deviceActions.discoverServices(deviceInfo));
 
   discoverServices$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_SERVICE_DISCOVERY)
-      .map(action => action.payload)
+      .map<IDeviceInfo>(toPayload)
       .mergeMap((deviceInfo) =>
         this.bleService.discoverServices(deviceInfo)
           .map(res => this.deviceActions.discoveredServices(res))
@@ -83,7 +87,7 @@ export class DeviceEpics {
 
   discoverCharacterisitics$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_CHARACTERISTICS_DISCOVERY)
-      .map(action => action.payload)
+      .map<IService>(toPayload)
       .mergeMap((service) =>
         this.bleService.discoverCharacteristics(service)
           .map(res => this.deviceActions.discoveredCharacteristics(res))
@@ -92,7 +96,7 @@ export class DeviceEpics {
 
   monitorCharacteristic$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_CHARACTERISTIC_MONITORING)
-      .map(action => action.payload)
+      .map<ICharacteristicState>(toPayload)
       .mergeMap((charState) =>
         this.bleService.monitorCharacteristic(charState.characteristic, charState.transactionId)
           .map(res => this.deviceActions.readCharacteristic(res))
@@ -102,7 +106,7 @@ export class DeviceEpics {
 
   stopCharacteristicMonitoring$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.STOP_CHARACTERISTIC_MONITORING)
-      .map(action => action.payload)
+      .map<ICharacteristicState>(toPayload)
       .mergeMap((charState) =>
         this.bleService.stopCharacteristicMonitoring(charState.characteristic, charState.transactionId)
           .map(() => this.deviceActions.stoppedCharacteristicMonitoring(charState))
@@ -111,7 +115,7 @@ export class DeviceEpics {
 
   readCharacteristic$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_READING_CHARACTERISITIC)
-      .map(action => action.payload)
+      .map<ICharacteristicState>(toPayload)
       .mergeMap((charState) =>
         this.bleService.readCharacteristic(charState.characteristic, charState.transactionId)
           .map((res) => this.deviceActions.readCharacteristic(res))
@@ -120,7 +124,7 @@ export class DeviceEpics {
 
   writeCharacteristic$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_WRITING_CHARACTERISITIC)
-      .map(action => action.payload)
+      .map<{ charState: ICharacteristicState; value: string; withResponse: boolean; }>(toPayload)
       .mergeMap((payload) =>
         this.bleService.writeCharacteristic(payload.charState.characteristic, payload.value, payload.withResponse, payload.charState.transactionId)
           .map((res) => this.deviceActions.wroteCharacteristic(res))
