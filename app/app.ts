@@ -1,4 +1,5 @@
 declare var require: any;
+
 import { Component } from '@angular/core';
 import { ionicBootstrap, Platform } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
@@ -8,7 +9,7 @@ import { combineEpics, createEpicMiddleware } from 'redux-observable';
 const createLogger = require('redux-logger');
 
 import APP_PROVIDERS from './module';
-
+import { Action } from './actions';
 import { DeviceEpics } from './epics/device';
 import { IAppState, INITIAL_APP_STATE } from './state';
 import rootReducer from './reducers';
@@ -25,7 +26,7 @@ export class MyApp {
     deviceEpics: DeviceEpics,
     platform: Platform) {
 
-    const combinedEpics = combineEpics(
+    const combinedEpics = combineEpics<Action>(
       deviceEpics.requestPermission$,
       deviceEpics.startScan$,
       deviceEpics.stopScan$,
