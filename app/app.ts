@@ -1,8 +1,18 @@
+declare var require: any;
 import { Component } from '@angular/core';
 import { ionicBootstrap, Platform } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
+import { NgRedux } from 'ng2-redux';
+import { combineEpics, createEpicMiddleware } from 'redux-observable';
+
+const createLogger = require('redux-logger');
 
 import APP_PROVIDERS from './module';
+
+import { DeviceEpics } from './epics/device';
+import { IAppState, INITIAL_APP_STATE } from './state';
+import rootReducer from './reducers';
+
 import { HomePage } from './pages/home/home';
 
 @Component({
@@ -10,14 +20,48 @@ import { HomePage } from './pages/home/home';
 })
 export class MyApp {
   rootPage: any = HomePage;
-  constructor(public platform: Platform) {
+  constructor(
+    ngRedux: NgRedux<IAppState>,
+    deviceEpics: DeviceEpics,
+    platform: Platform) {
+
+    const combinedEpics = combineEpics(
+      deviceEpics.requestPermission$,
+      deviceEpics.startScan$,
+      deviceEpics.stopScan$,
+      deviceEpics.connectToDevice$,
+      deviceEpics.disconnectDevice$,
+      deviceEpics.monitorDisconnect$,
+      deviceEpics.deviceConnected$,
+      deviceEpics.discoverServices$,
+      deviceEpics.discoverCharacterisitics$,
+      deviceEpics.monitorCharacteristic$,
+      deviceEpics.stopCharacteristicMonitoring$,
+      deviceEpics.readCharacteristic$,
+      deviceEpics.writeCharacteristic$,
+      deviceEpics.getState$,
+      deviceEpics.monitorStateChange$
+    );
+
+    const middleware = [
+      createLogger(),
+      createEpicMiddleware(combinedEpics)
+    ];
+
+    ngRedux.configureStore(
+      rootReducer,
+      INITIAL_APP_STATE,
+      middleware
+    );
 
     platform.ready().then(() => {
       StatusBar.styleDefault();
     });
+
   }
 }
 
 ionicBootstrap(MyApp, [
-  ...APP_PROVIDERS
+  ...APP_PROVIDERS,
+  NgRedux
 ]);

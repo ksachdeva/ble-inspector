@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Component } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
-import { Store } from '@ngrx/store';
+import { NgRedux } from 'ng2-redux';
 
 import { BluetoothState } from './../../enums';
 import { IAppState } from './../../state';
@@ -22,7 +22,7 @@ export class HomePage {
 
   constructor(
     private platform: Platform,
-    private store: Store<IAppState>,
+    private store: NgRedux<IAppState>,
     private deviceActions: DeviceActions,
     private navCtrl: NavController) {
 

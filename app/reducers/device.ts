@@ -1,44 +1,30 @@
 import * as _ from 'lodash';
-import { Action } from '@ngrx/store';
 
 import { BluetoothState } from './../enums';
 import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 import { IDeviceState, ICharacteristicState } from './../state/device';
+import { INITIAL_DEVICE_STATE } from './../state';
 import { DeviceActions } from './../actions/device';
 
-const initialState: IDeviceState = {
-  bleState: BluetoothState.Unknown,
-  deviceInfo: null,
-  connected: false,
-  connecting: false,
-  discoveringServices: false,
-  discoveringChars: false,
-  services: [],
-  chars: [],
-  scanning: false,
-  permission: false,
-  devices: []
-};
-
-function startScan(state = initialState) {
+function startScan(state = INITIAL_DEVICE_STATE) {
   return Object.assign({}, state, {
     scanning: true
   });
 }
 
-function stopScan(state = initialState) {
+function stopScan(state = INITIAL_DEVICE_STATE) {
   return Object.assign({}, state, {
     scanning: false
   });
 }
 
-function updatePermission(state = initialState, granted: boolean) {
+function updatePermission(state = INITIAL_DEVICE_STATE, granted: boolean) {
   return Object.assign({}, state, {
     permission: granted
   });
 }
 
-function addDeviceInfo(state = initialState, payload: IDeviceInfo) {
+function addDeviceInfo(state = INITIAL_DEVICE_STATE, payload: IDeviceInfo) {
   // if we have the device then we simply update it
   // else we push it in the array
   const device = _.find(state.devices, (d) => d.uuid === payload.uuid);
@@ -55,7 +41,7 @@ function addDeviceInfo(state = initialState, payload: IDeviceInfo) {
   }
 }
 
-function connectedToDevice(state = initialState, payload: IDeviceInfo) {
+function connectedToDevice(state = INITIAL_DEVICE_STATE, payload: IDeviceInfo) {
   return Object.assign({}, state, {
     connected: true,
     connecting: false,
@@ -63,34 +49,34 @@ function connectedToDevice(state = initialState, payload: IDeviceInfo) {
   });
 }
 
-function connectToDevice(state = initialState, payload: IDeviceInfo) {
+function connectToDevice(state = INITIAL_DEVICE_STATE, payload: IDeviceInfo) {
   return Object.assign({}, state, {
     connecting: true,
     deviceInfo: payload
   });
 }
 
-function disconnectedDevice(state = initialState) {
+function disconnectedDevice(state = INITIAL_DEVICE_STATE) {
   return Object.assign({}, state, {
     connecting: false,
     connected: false
   });
 }
 
-function startDiscoveryService(state = initialState) {
+function startDiscoveryService(state = INITIAL_DEVICE_STATE) {
   return Object.assign({}, state, {
     discoveringServices: true
   });
 }
 
-function servicesDiscovered(state = initialState, payload: Array<IService>) {
+function servicesDiscovered(state = INITIAL_DEVICE_STATE, payload: Array<IService>) {
   return Object.assign({}, state, {
     discoveringServices: false,
     services: payload
   });
 }
 
-function charsDiscovered(state = initialState, payload: Array<ICharacteristic>) {
+function charsDiscovered(state = INITIAL_DEVICE_STATE, payload: Array<ICharacteristic>) {
   const charsState: Array<ICharacteristicState> = _.map(payload, (p) => ({ characteristic: p, transactionId: null }));
   return Object.assign({}, state, {
     discoveringChars: false,
@@ -98,19 +84,19 @@ function charsDiscovered(state = initialState, payload: Array<ICharacteristic>) 
   });
 }
 
-function startCharacteristicMonitoring(state = initialState, payload: ICharacteristicState) {
+function startCharacteristicMonitoring(state = INITIAL_DEVICE_STATE, payload: ICharacteristicState) {
   const readChar = _.find(state.chars, (c) => c.characteristic.uuid === payload.characteristic.uuid);
   readChar.transactionId = '2132';
   return state;
 }
 
-function stoppedCharacteristicMonitoring(state = initialState, payload: ICharacteristicState) {
+function stoppedCharacteristicMonitoring(state = INITIAL_DEVICE_STATE, payload: ICharacteristicState) {
   const readChar = _.find(state.chars, (c) => c.characteristic.uuid === payload.characteristic.uuid);
   readChar.transactionId = null;
   return state;
 }
 
-function readCharacterisitic(state = initialState, payload: ICharacteristic) {
+function readCharacterisitic(state = INITIAL_DEVICE_STATE, payload: ICharacteristic) {
   // find the char that we have read and replace its values
   // mutation ??
   const readChar = _.find(state.chars, (c) => c.characteristic.uuid === payload.uuid);
@@ -118,13 +104,13 @@ function readCharacterisitic(state = initialState, payload: ICharacteristic) {
   return state;
 }
 
-function bleStateChange(state = initialState, payload: BluetoothState) {
+function bleStateChange(state = INITIAL_DEVICE_STATE, payload: BluetoothState) {
   return Object.assign({}, state, {
     bleState: payload
   });
 }
 
-export default function(state = initialState, action: Action): IDeviceState {
+export default function deviceReducer(state = INITIAL_DEVICE_STATE, action: any): IDeviceState {
   switch (action.type) {
     case DeviceActions.PERMISSION_GRANTED:
       return updatePermission(state, true);

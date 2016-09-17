@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Component, NgZone } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
-import { Store } from '@ngrx/store';
+import { NgRedux } from 'ng2-redux';
 
 import { IAppState } from './../../state';
 import { IDeviceInfo, IService } from './../../plugin';
@@ -24,7 +24,7 @@ export class ServicesPage {
   constructor(
     private deviceActions: DeviceActions,
     private viewCtrl: ViewController,
-    private store: Store<IAppState>,
+    private store: NgRedux<IAppState>,
     private navCtrl: NavController,
     private navParams: NavParams,
     private ngZone: NgZone) {

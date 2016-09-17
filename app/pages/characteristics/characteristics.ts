@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { Component, NgZone } from '@angular/core';
 import { NavController, AlertController, ActionSheetController, NavParams, ViewController } from 'ionic-angular';
-import { Store } from '@ngrx/store';
+import { NgRedux } from 'ng2-redux';
 
 import { IAppState, ICharacteristicState } from './../../state';
 import { ICharacteristic, IService } from './../../plugin';
@@ -22,7 +22,7 @@ export class CharacteristicsPage {
     private actionSheetCtrl: ActionSheetController,
     private deviceActions: DeviceActions,
     private viewCtrl: ViewController,
-    private store: Store<IAppState>,
+    private store: NgRedux<IAppState>,
     private navCtrl: NavController,
     private navParams: NavParams,
     private ngZone: NgZone) {
@@ -104,7 +104,7 @@ export class CharacteristicsPage {
           handler: () => {
             this.readCharacteristic(charState);
           }
-        },  {
+        }, {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {

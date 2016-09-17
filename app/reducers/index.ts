@@ -1,7 +1,10 @@
-import device from './device';
+import { combineReducers } from 'redux';
 
-const APP_REDUCERS = {
-  device
-};
+import { IAppState } from './../state';
+import deviceReducer from './device';
 
-export default APP_REDUCERS;
+const rootReducer = combineReducers<IAppState>({
+  device: deviceReducer
+});
+
+export default rootReducer;

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
 import { BluetoothState } from './../enums';
 import { ICharacteristicState } from './../state';
+import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
 @Injectable()
 export class DeviceActions {
