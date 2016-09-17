@@ -6,6 +6,7 @@ import { StatusBar } from 'ionic-native';
 import { NgRedux } from 'ng2-redux';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
+const devTools = require('remote-redux-devtools');
 const createLogger = require('redux-logger');
 
 import APP_PROVIDERS from './module';
@@ -49,10 +50,21 @@ export class MyApp {
       createEpicMiddleware(combinedEpics)
     ];
 
+    const enhancers = [
+      // uncomment and specify your own configuration
+      /*
+      devTools({
+        realtime: true,
+        port: 8000,
+        hostname: '192.168.1.78'
+      })*/
+    ];
+
     ngRedux.configureStore(
       rootReducer,
       INITIAL_APP_STATE,
-      middleware
+      middleware,
+      enhancers
     );
 
     platform.ready().then(() => {
