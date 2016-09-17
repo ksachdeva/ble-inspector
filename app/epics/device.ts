@@ -1,17 +1,19 @@
-import 'rxjs';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Diagnostic } from 'ionic-native';
+import { Action } from 'redux';
+import { ActionsObservable } from 'redux-observable';
 
 import { IDeviceInfo, IService } from './../plugin';
 import { DeviceActions } from './../actions/device';
+import { FluxAction } from './../actions';
 import { IAppState, ICharacteristicState } from './../state';
 import { BLECentralService } from './../services/ble-central';
 
 @Injectable()
 export class DeviceEpics {
 
-  requestPermission$ = action$ =>
+  requestPermission$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.PERMISSION_REQUEST)
       .mergeMap(() =>
         this.bleService.requestRuntimePermission()
@@ -24,7 +26,7 @@ export class DeviceEpics {
           })
       );
 
-  startScan$ = action$ =>
+  startScan$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_SCAN)
       .mergeMap(() =>
         this.bleService.startScan()
@@ -32,7 +34,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  stopScan$ = action$ =>
+  stopScan$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.STOP_SCAN)
       .mergeMap(() =>
         this.bleService.stopScan()
@@ -40,7 +42,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  connectToDevice$ = action$ =>
+  connectToDevice$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.CONNECT_TO_DEVICE)
       .map(action => action.payload)
       .mergeMap((deviceInfo) =>
@@ -49,7 +51,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.failedToConnectDevice(deviceInfo, err)))
       );
 
-  disconnectDevice$ = action$ =>
+  disconnectDevice$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.DISCONNECT_DEVICE)
       .map(action => action.payload)
       .mergeMap((deviceInfo) =>
@@ -58,7 +60,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  monitorDisconnect$ = action$ =>
+  monitorDisconnect$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.MONITOR_DEVICE_DISCONNECT)
       .mergeMap((deviceInfo) =>
         this.bleService.monitorDeviceDisconnect()
@@ -66,12 +68,12 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  deviceConnected$ = action$ =>
+  deviceConnected$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.CONNECTED_TO_DEVICE)
       .map(action => action.payload)
       .map(deviceInfo => this.deviceActions.discoverServices(deviceInfo));
 
-  discoverServices$ = action$ =>
+  discoverServices$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.START_SERVICE_DISCOVERY)
       .map(action => action.payload)
       .mergeMap((deviceInfo) =>
@@ -80,7 +82,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  discoverCharacterisitics$ = action$ =>
+  discoverCharacterisitics$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.START_CHARACTERISTICS_DISCOVERY)
       .map(action => action.payload)
       .mergeMap((service) =>
@@ -89,7 +91,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  monitorCharacteristic$ = action$ =>
+  monitorCharacteristic$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.START_CHARACTERISTIC_MONITORING)
       .map(action => action.payload)
       .mergeMap((charState) =>
@@ -99,7 +101,7 @@ export class DeviceEpics {
       );
 
 
-  stopCharacteristicMonitoring$ = action$ =>
+  stopCharacteristicMonitoring$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.STOP_CHARACTERISTIC_MONITORING)
       .map(action => action.payload)
       .mergeMap((charState) =>
@@ -108,7 +110,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  readCharacteristic$ = action$ =>
+  readCharacteristic$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.START_READING_CHARACTERISITIC)
       .map(action => action.payload)
       .mergeMap((charState) =>
@@ -117,7 +119,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  writeCharacteristic$ = action$ =>
+  writeCharacteristic$ = (action$: ActionsObservable<FluxAction>) =>
     action$.ofType(DeviceActions.START_WRITING_CHARACTERISITIC)
       .map(action => action.payload)
       .mergeMap((payload) =>
@@ -126,7 +128,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  getState$ = action$ =>
+  getState$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.GET_CURRENT_STATE)
       .mergeMap(() =>
         this.bleService.getState()
@@ -134,7 +136,7 @@ export class DeviceEpics {
           .catch(err => Observable.of(this.deviceActions.bleError(err)))
       );
 
-  monitorStateChange$ = action$ =>
+  monitorStateChange$ = (action$: ActionsObservable<Action>) =>
     action$.ofType(DeviceActions.START_STATE_MONITOR)
       .mergeMap(() =>
         this.bleService.monitorState()
