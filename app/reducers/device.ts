@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-
+import { Action } from './../actions';
 import { BluetoothState } from './../enums';
 import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
 import { IDeviceState, ICharacteristicState } from './../state/device';
@@ -110,7 +110,7 @@ function bleStateChange(state = INITIAL_DEVICE_STATE, payload: BluetoothState) {
   });
 }
 
-export default function deviceReducer(state = INITIAL_DEVICE_STATE, action: any): IDeviceState {
+export default function deviceReducer(state = INITIAL_DEVICE_STATE, action: Action): IDeviceState {
   switch (action.type) {
     case DeviceActions.PERMISSION_GRANTED:
       return updatePermission(state, true);
