@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { Action } from './index';
 import { BluetoothState } from './../enums';
 import { ICharacteristicState } from './../state';
 import { IDeviceInfo, IService, ICharacteristic } from './../plugin';
@@ -52,82 +53,82 @@ export class DeviceActions {
   static GET_CURRENT_STATE = 'Get current state';
   static BLE_STATE_CHANGE = 'Bluetooth state changed';
 
-  addDeviceInfo(payload: IDeviceInfo) {
+  addDeviceInfo(payload: IDeviceInfo): Action {
     return {
       type: DeviceActions.ADD_DEVICE_INFO,
       payload
     };
   }
 
-  requestPermission() {
+  requestPermission(): Action {
     return {
       type: DeviceActions.PERMISSION_REQUEST
     };
   }
 
-  permissionGranted() {
+  permissionGranted(): Action {
     return {
       type: DeviceActions.PERMISSION_GRANTED
     };
   }
 
-  permissionDenied() {
+  permissionDenied(): Action {
     return {
       type: DeviceActions.PERMISSION_DENIED
     };
   }
 
-  startScan() {
+  startScan(): Action {
     return {
       type: DeviceActions.START_SCAN
     };
   }
 
-  startedScan() {
+  startedScan(): Action {
     return {
       type: DeviceActions.STARTED_SCAN
     };
   }
 
-  stopScan() {
+  stopScan(): Action {
     return {
       type: DeviceActions.STOP_SCAN
     };
   }
 
-  stoppedScan() {
+  stoppedScan(): Action {
     return {
       type: DeviceActions.STOPPED_SCAN
     };
   }
 
-  getCurrentState() {
+  getCurrentState(): Action {
     return {
       type: DeviceActions.GET_CURRENT_STATE
     };
   }
 
-  startStateMonitoring() {
+  startStateMonitoring(): Action {
     return {
       type: DeviceActions.START_STATE_MONITOR
     };
   }
 
-  bleStateChanged(payload: BluetoothState) {
+  bleStateChanged(payload: BluetoothState): Action {
     return {
       type: DeviceActions.BLE_STATE_CHANGE,
       payload
     };
   }
 
-  bleError(payload: any) {
+  bleError(payload: any): Action {
     return {
       type: DeviceActions.BLE_ERROR,
       payload
     };
   }
 
-  startWritingCharacteristic(payload: ICharacteristicState, value: string, withResponse: boolean) {
+  startWritingCharacteristic(payload: ICharacteristicState, value: string, withResponse: boolean): Action {
     return {
       type: DeviceActions.START_WRITING_CHARACTERISITIC,
       payload: {
@@ -138,35 +139,35 @@ export class DeviceActions {
     };
   }
 
-  wroteCharacteristic(payload: ICharacteristic) {
+  wroteCharacteristic(payload: ICharacteristic): Action {
     return {
       type: DeviceActions.WROTE_CHRACTERISTIC,
       payload
     };
   }
 
-  startReadingCharacteristic(payload: ICharacteristicState) {
+  startReadingCharacteristic(payload: ICharacteristicState): Action {
     return {
       type: DeviceActions.START_READING_CHARACTERISITIC,
       payload
     };
   }
 
-  readCharacteristic(payload: ICharacteristic) {
+  readCharacteristic(payload: ICharacteristic): Action {
     return {
       type: DeviceActions.READ_CHARACTERISITC,
       payload
     };
   }
 
-  startCharacteristicMonitoring(payload: ICharacteristicState) {
+  startCharacteristicMonitoring(payload: ICharacteristicState): Action {
     return {
       type: DeviceActions.START_CHARACTERISTIC_MONITORING,
       payload
     };
   }
 
-  stopCharacteristicMonitoring(payload: ICharacteristicState) {
+  stopCharacteristicMonitoring(payload: ICharacteristicState): Action {
     return {
       type: DeviceActions.STOP_CHARACTERISTIC_MONITORING,
       payload
@@ -180,69 +181,69 @@ export class DeviceActions {
     };
   }
 
-  discoverCharacterisitics(payload: IService) {
+  discoverCharacterisitics(payload: IService): Action {
     return {
       type: DeviceActions.START_CHARACTERISTICS_DISCOVERY,
       payload
     };
   }
 
-  discoveredCharacteristics(payload: Array<ICharacteristic>) {
+  discoveredCharacteristics(payload: Array<ICharacteristic>): Action {
     return {
       type: DeviceActions.CHARACTERISTICS_DISCOVERED,
       payload
     };
   }
 
-  discoverServices(payload: IDeviceInfo) {
+  discoverServices(payload: IDeviceInfo): Action {
     return {
       type: DeviceActions.START_SERVICE_DISCOVERY,
       payload
     };
   }
 
-  discoveredServices(payload: Array<IService>) {
+  discoveredServices(payload: Array<IService>): Action {
     return {
       type: DeviceActions.SERVICES_DISCOVERED,
       payload
     };
   }
 
-  monitorDeviceDisconnect() {
+  monitorDeviceDisconnect(): Action {
     return {
       type: DeviceActions.MONITOR_DEVICE_DISCONNECT
     };
   }
 
-  deviceDisconnected(payload: IDeviceInfo) {
+  deviceDisconnected(payload: IDeviceInfo): Action {
     return {
       type: DeviceActions.DEVICE_DISCONNECTED,
       payload
     };
   }
 
-  disconnectDevice(payload: IDeviceInfo) {
+  disconnectDevice(payload: IDeviceInfo): Action {
     return {
       type: DeviceActions.DISCONNECT_DEVICE,
       payload
     };
   }
 
-  connectToDevice(payload: IDeviceInfo) {
+  connectToDevice(payload: IDeviceInfo): Action {
     return {
       type: DeviceActions.CONNECT_TO_DEVICE,
       payload
     };
   }
 
-  connectedToDevice(payload: IDeviceInfo) {
+  connectedToDevice(payload: IDeviceInfo): Action {
     return {
       type: DeviceActions.CONNECTED_TO_DEVICE,
       payload
     };
   }
 
-  failedToConnectDevice(device: IDeviceInfo, error: any) {
+  failedToConnectDevice(device: IDeviceInfo, error: any): Action {
     return {
       type: DeviceActions.CONNECTION_TO_DEVICE_FAILED,
       payload: {
