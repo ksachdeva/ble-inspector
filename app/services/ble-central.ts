@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Injectable, NgZone } from '@angular/core';
 import { Diagnostic } from 'ionic-native';
-import '@ngrx/core/add/operator/enterZone';
+import { enterZone } from 'rxjs-zone-operators';
 
 import { BluetoothState } from './../enums';
 import { Central, IDeviceInfo, IService, ICharacteristic } from './../plugin';
@@ -14,7 +14,8 @@ export class BLECentralService {
 
   requestRuntimePermission(): Observable<string> {
     const permission = Diagnostic.permission.ACCESS_COARSE_LOCATION;
-    return Observable.fromPromise(Diagnostic.requestRuntimePermission(permission)).enterZone(this.ngZone);
+    return Observable.fromPromise(Diagnostic.requestRuntimePermission(permission))
+      .enterZone(this.ngZone);
   }
 
   startScan(): Observable<IDeviceInfo> {
