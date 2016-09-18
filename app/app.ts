@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { ionicBootstrap, Platform } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
 import { NgRedux } from 'ng2-redux';
-import { combineEpics, createEpicMiddleware } from 'redux-observable';
+import { createEpicMiddleware } from 'redux-observable';
 
 const devTools = require('remote-redux-devtools');
 const createLogger = require('redux-logger');
@@ -12,10 +12,11 @@ const createLogger = require('redux-logger');
 import APP_PROVIDERS from './module';
 import { Action } from './actions';
 import { DeviceEpics } from './epics/device';
+import APP_EPICS from './epics';
 import { IAppState, INITIAL_APP_STATE } from './state';
 import rootReducer from './reducers';
-
 import { HomePage } from './pages/home/home';
+import { mergeEpics } from 'redux-observable-extensions';
 
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'
@@ -27,9 +28,7 @@ export class MyApp {
     deviceEpics: DeviceEpics,
     platform: Platform) {
 
-    const combinedEpics = combineEpics<Action>(
-      ...deviceEpics.epics
-    );
+    const combinedEpics = mergeEpics<Action>(deviceEpics);
 
     const middleware = [
       createLogger(),
