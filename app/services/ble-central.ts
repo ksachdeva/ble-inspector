@@ -1,8 +1,9 @@
+declare var require: any;
 import { Observable } from 'rxjs';
 import { Injectable, NgZone } from '@angular/core';
 import { Diagnostic } from 'ionic-native';
 import { enterZone } from 'rxjs-zone-operators';
-
+require('rxjs-zone-operators');
 import { BluetoothState } from './../enums';
 import { Central, IDeviceInfo, IService, ICharacteristic } from './../plugin';
 
